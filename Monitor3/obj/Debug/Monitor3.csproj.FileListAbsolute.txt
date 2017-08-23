@@ -1,0 +1,6 @@
+c:\users\rube\documents\visual studio 2017\Projects\Monitor3\Monitor3\bin\Debug\Monitor3.exe.config
+c:\users\rube\documents\visual studio 2017\Projects\Monitor3\Monitor3\bin\Debug\Monitor3.exe
+c:\users\rube\documents\visual studio 2017\Projects\Monitor3\Monitor3\bin\Debug\Monitor3.pdb
+c:\users\rube\documents\visual studio 2017\Projects\Monitor3\Monitor3\obj\Debug\Monitor3.exe
+c:\users\rube\documents\visual studio 2017\Projects\Monitor3\Monitor3\obj\Debug\Monitor3.pdb
+C:\Users\Rube\Documents\Visual Studio 2017\Projects\Monitor3\Monitor3\obj\Debug\Monitor3.csprojResolveAssemblyReference.cache

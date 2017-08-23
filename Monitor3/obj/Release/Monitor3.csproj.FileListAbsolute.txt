@@ -1,0 +1,13 @@
+C:\Users\Rube\Documents\Visual Studio 2017\Projects\Monitor3\Monitor3\bin\Release\Monitor3.exe.config
+C:\Users\Rube\Documents\Visual Studio 2017\Projects\Monitor3\Monitor3\bin\Release\Monitor3.exe
+C:\Users\Rube\Documents\Visual Studio 2017\Projects\Monitor3\Monitor3\bin\Release\Monitor3.pdb
+C:\Users\Rube\Documents\Visual Studio 2017\Projects\Monitor3\Monitor3\obj\Release\Monitor3.csprojResolveAssemblyReference.cache
+C:\Users\Rube\Documents\Visual Studio 2017\Projects\Monitor3\Monitor3\obj\Release\Monitor3.exe
+C:\Users\Rube\Documents\Visual Studio 2017\Projects\Monitor3\Monitor3\obj\Release\Monitor3.pdb
+C:\Users\Administrator\Documents\Visual Studio 2017\Projects\Monitor3\Monitor3\bin\Release\Monitor3.exe.config
+C:\Users\Administrator\Documents\Visual Studio 2017\Projects\Monitor3\Monitor3\bin\Release\Monitor3.exe
+C:\Users\Administrator\Documents\Visual Studio 2017\Projects\Monitor3\Monitor3\bin\Release\Monitor3.pdb
+C:\Users\Administrator\Documents\Visual Studio 2017\Projects\Monitor3\Monitor3\obj\Release\Monitor3.csprojResolveAssemblyReference.cache
+C:\Users\Administrator\Documents\Visual Studio 2017\Projects\Monitor3\Monitor3\obj\Release\Monitor3.csproj.CoreCompileInputs.cache
+C:\Users\Administrator\Documents\Visual Studio 2017\Projects\Monitor3\Monitor3\obj\Release\Monitor3.exe
+C:\Users\Administrator\Documents\Visual Studio 2017\Projects\Monitor3\Monitor3\obj\Release\Monitor3.pdb

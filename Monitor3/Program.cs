@@ -10,11 +10,15 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WindowsInput;
 
 namespace Monitor3
 {
     class Program
     {
+        [DllImport("Kernel32", EntryPoint = "GetCurrentThreadId", ExactSpelling = true)]
+        public static extern Int32 GetCurrentWin32ThreadId();
+
         [DllImport("user32.dll")]
         static extern bool GetCursorPos(ref Point lpPoint);
 
@@ -119,10 +123,15 @@ namespace Monitor3
                     {
                         ki = new KeyboardInput
                         {
-                            wVk = 0,
-                            wScan = key,
-                            dwFlags = (uint) (keyEvent | KeyEventF.Scancode),
-                            dwExtraInfo = GetMessageExtraInfo()
+                            //wVk = 0,
+                            //wScan = key,
+                            wVk = key,
+                            wScan = 0,
+                            dwFlags = (uint) keyEvent,
+                            //dwFlags = (uint) (keyEvent | KeyEventF.Scancode),
+                            //dwFlags = KeyEventF.KeyUp == keyEvent ? (uint) (KeyEventF.KeyUp | KeyEventF.Unicode) : (uint) (keyEvent | KeyEventF.Scancode),
+                            //dwExtraInfo = GetMessageExtraInfo()
+                            dwExtraInfo = IntPtr.Zero
                         }
                     }
                 }
@@ -159,9 +168,9 @@ namespace Monitor3
         [StructLayout(LayoutKind.Sequential)]
         private struct KeyboardInput
         {
-            public ushort wVk;
-            public ushort wScan;
-            public uint dwFlags;
+            public ushort wVk;      // Virtual KeyCode (not needed here)
+            public ushort wScan;    // Directx Keycode
+            public uint dwFlags;    // This tells you what is use (Keyup, Keydown..)
             public readonly uint time;
             public IntPtr dwExtraInfo;
         }
@@ -200,6 +209,8 @@ namespace Monitor3
         private const int DIK_RIGHT = 0xCD;
         private const int DIK_A = 0x1E;
         private const int DIK_D = 0x20;
+        private const int DIK_ESC = 0x01;
+        private const int DIK_LCTRL = 0x1D;
 
         private const double KEY_MESSAGE_OFFSET = 7000;
         private static readonly Point POS_FISHING_SIGN = new Point(1385, 105);
@@ -215,6 +226,7 @@ namespace Monitor3
 
         static Stopwatch sw = new Stopwatch();
 
+        static bool printDetailLog = false;
         static long getColorTimeSum = 0;
         static int getColorTimeCount = 0;
 
@@ -392,13 +404,16 @@ namespace Monitor3
                     costTime = stopWatch.ElapsedMilliseconds;
                 }
 
-                if (result)
+                if (printDetailLog)
                 {
-                    Console.WriteLine("★ Feature:{0} is on screen, rate is {1}%, takes {2} ms", name, matchRate, costTime);
-                }
-                else
-                {
-                    Console.WriteLine("★ Feature:{0} is NOT on screen, rate is {1}%, takes {2} ms", name, matchRate, costTime);
+                    if (result)
+                    {
+                        Console.WriteLine("★ Feature:{0} is on screen, rate is {1}%, takes {2} ms", name, matchRate, costTime);
+                    }
+                    else
+                    {
+                        Console.WriteLine("★ Feature:{0} is NOT on screen, rate is {1}%, takes {2} ms", name, matchRate, costTime);
+                    }
                 }
 
                 wasOnScreen = result;
@@ -597,7 +612,7 @@ namespace Monitor3
                         }
                         else
                         {
-                            Console.WriteLine("[IntimacyMode] Unknown key type");
+                            log("[IntimacyMode] Unknown key type");
                         }
                     }
 
@@ -675,10 +690,10 @@ namespace Monitor3
 
         private static void Form_Load(object sender, EventArgs e)
         {
-            Console.WriteLine("Form_Load");
+            log("Form_Load");
             if (form == sender)
             {
-                Console.WriteLine("form is sender!");
+                log("form is sender!");
             }
             Form sourceForm = (Form)sender;
             SetWindowPos(sourceForm.Handle, HWND_TOPMOST, 0, 0, 0, 0, TOPMOST_FLAGS);
@@ -780,7 +795,10 @@ namespace Monitor3
             Point position = Cursor.Position;
             Point newPosition = new Point((int)(position.X * 1.75), (int)(position.Y * 1.75));
 
-            Console.WriteLine("Position = {0}x{1}, newPosition = {2}x{3}", position.X, position.Y, newPosition.X, newPosition.Y);
+            if (printDetailLog)
+            {
+                Console.WriteLine("Position = {0}x{1}, newPosition = {2}x{3}", position.X, position.Y, newPosition.X, newPosition.Y);
+            }
 
             return GetColorAt(position);
         }
@@ -792,12 +810,13 @@ namespace Monitor3
 
         private static void TimerCallback(Object o)
         {
-            Console.WriteLine("");
-
             // Display the date/time when this method got called.
-            Console.WriteLine("-----------------------------------------");
-            Console.WriteLine(DateTime.Now);
-            Console.WriteLine("-----------------------------------------");
+            if (printDetailLog)
+            {
+                Console.WriteLine("-----------------------------------------");
+                Console.WriteLine(DateTime.Now);
+                Console.WriteLine("-----------------------------------------");
+            }
 
             SetFormTopMost(true);
 
@@ -882,7 +901,10 @@ namespace Monitor3
         {
             Color c = GetCursorColor();
 
-            Console.WriteLine("Color(RGBA) = {0}, {1}, {2}, {3}", c.R, c.G, c.B, c.A);
+            if (printDetailLog)
+            {
+                Console.WriteLine("Color(RGBA) = {0}, {1}, {2}, {3}", c.R, c.G, c.B, c.A);
+            }
 
             btnSpace.IsOnScreen();
 
@@ -900,7 +922,7 @@ namespace Monitor3
 
                     if (isKeyPending)
                     {
-                        Console.WriteLine("★ Key is still pending now");
+                        log("★ Key is still pending now");
                     }
                     else if ((currentTime - lastKeyMessageTimeStamp) < KEY_MESSAGE_OFFSET)
                     {
@@ -911,18 +933,52 @@ namespace Monitor3
                     {
                         isKeyPending = true;
 
-                        Console.WriteLine("★ Prepare to send SPACE message");
+                        log("★ Prepare to send SPACE message");
+
+                        //log("★ Send SPACE message");
+
+                        //lastKeyMessageTimeStamp = ToMillisecondsWith(DateTime.Now);
+
+                        //Random random = new Random(DateTime.Now.Millisecond);
+
+                        //InputSimulator.SimulateKeyPress(VirtualKeyCode.SPACE);
+
+                        //isKeyPending = false;
 
                         Random random = new Random(DateTime.Now.Millisecond);
-                        
+
                         System.Threading.Timer timer = null;
                         timer = new System.Threading.Timer((obj) =>
                         {
-                            Console.WriteLine("★ Send SPACE message");
+                            log("★ Send SPACE message");
 
                             lastKeyMessageTimeStamp = ToMillisecondsWith(DateTime.Now);
 
-                            SendKeyPress(DIK_SPACE);
+                            //SendKeyPress(DIK_SPACE);
+                            //SendKey(DIK_SPACE, KeyEventF.KeyDown);
+                            SendKey(VK_SPACEBAR, KeyEventF.KeyDown);
+
+                            Thread.Sleep(random.Next(200, 400));
+
+                            SendKey(VK_SPACEBAR, KeyEventF.KeyUp);
+
+                            //InputSimulator.SimulateKeyDown(VirtualKeyCode.SPACE);
+
+                            //Thread.Sleep(random.Next(200, 400));
+
+                            //InputSimulator.SimulateKeyUp(VirtualKeyCode.SPACE);
+
+                            //InputSimulator.SimulateKeyPress(VirtualKeyCode.SPACE);
+
+                            //Thread.Sleep(random.Next(20, 40));
+
+                            //SendKey(DIK_ESC, KeyEventF.KeyDown);
+
+                            //Thread.Sleep(random.Next(120, 200));
+
+                            //SendKey(DIK_ESC, KeyEventF.KeyUp);
+
+                            isKeyPending = false;
 
                             timer.Dispose();
                         }, null, random.Next(3000, 7000), System.Threading.Timeout.Infinite);
@@ -954,6 +1010,24 @@ namespace Monitor3
             {
                 Console.WriteLine("★ Get Color AVG time is {0}/{1} = {2}", getColorTimeSum, getColorTimeCount, getColorTimeSum / getColorTimeCount);
             }
+        }
+
+        private static void log(String message)
+        {
+            Console.WriteLine(DateTime.Now.ToShortTimeString() + "  " + printTag() + message);
+        }
+
+        private static String printTag()
+        {
+            return printThreadIdTag() + "  ";
+        }
+
+        private static String printThreadIdTag()
+        {
+            int threadId = GetCurrentWin32ThreadId();
+            int managedThreadId = Thread.CurrentThread.ManagedThreadId;
+
+            return threadId + "(" + managedThreadId + ")";
         }
     }
 }

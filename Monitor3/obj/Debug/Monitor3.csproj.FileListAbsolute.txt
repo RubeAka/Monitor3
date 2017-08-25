@@ -4,3 +4,13 @@ c:\users\rube\documents\visual studio 2017\Projects\Monitor3\Monitor3\bin\Debug\
 c:\users\rube\documents\visual studio 2017\Projects\Monitor3\Monitor3\obj\Debug\Monitor3.exe
 c:\users\rube\documents\visual studio 2017\Projects\Monitor3\Monitor3\obj\Debug\Monitor3.pdb
 C:\Users\Rube\Documents\Visual Studio 2017\Projects\Monitor3\Monitor3\obj\Debug\Monitor3.csprojResolveAssemblyReference.cache
+C:\Users\Administrator\Documents\Visual Studio 2017\Projects\Monitor3\Monitor3\bin\Debug\Monitor3.exe.config
+C:\Users\Administrator\Documents\Visual Studio 2017\Projects\Monitor3\Monitor3\bin\Debug\Monitor3.exe
+C:\Users\Administrator\Documents\Visual Studio 2017\Projects\Monitor3\Monitor3\bin\Debug\Monitor3.pdb
+C:\Users\Administrator\Documents\Visual Studio 2017\Projects\Monitor3\Monitor3\obj\Debug\Monitor3.csprojResolveAssemblyReference.cache
+C:\Users\Administrator\Documents\Visual Studio 2017\Projects\Monitor3\Monitor3\obj\Debug\Monitor3.csproj.CoreCompileInputs.cache
+C:\Users\Administrator\Documents\Visual Studio 2017\Projects\Monitor3\Monitor3\obj\Debug\Monitor3.exe
+C:\Users\Administrator\Documents\Visual Studio 2017\Projects\Monitor3\Monitor3\obj\Debug\Monitor3.pdb
+C:\Users\Administrator\Documents\Visual Studio 2017\Projects\Monitor3\Monitor3\bin\Debug\InputSimulator.dll
+C:\Users\Administrator\Documents\Visual Studio 2017\Projects\Monitor3\Monitor3\bin\Debug\InputSimulator.pdb
+C:\Users\Administrator\Documents\Visual Studio 2017\Projects\Monitor3\Monitor3\bin\Debug\InputSimulator.xml

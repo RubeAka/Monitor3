@@ -123,21 +123,26 @@ namespace Monitor3
                     {
                         ki = new KeyboardInput
                         {
-                            //wVk = 0,
-                            //wScan = key,
-                            wVk = key,
-                            wScan = 0,
-                            dwFlags = (uint) keyEvent,
-                            //dwFlags = (uint) (keyEvent | KeyEventF.Scancode),
+                            wVk = 0,
+                            wScan = key,
+                            //wVk = key,
+                            //wScan = 0,
+                            //dwFlags = (uint) keyEvent,
+                            dwFlags = (uint) (keyEvent | KeyEventF.Scancode),
                             //dwFlags = KeyEventF.KeyUp == keyEvent ? (uint) (KeyEventF.KeyUp | KeyEventF.Unicode) : (uint) (keyEvent | KeyEventF.Scancode),
-                            //dwExtraInfo = GetMessageExtraInfo()
-                            dwExtraInfo = IntPtr.Zero
+                            dwExtraInfo = GetMessageExtraInfo()
+                            //dwExtraInfo = IntPtr.Zero
                         }
                     }
                 }
             };
 
-            SendInput((uint)inputs.Length, inputs, Marshal.SizeOf(typeof(Input)));
+            var successful = SendInput((uint)inputs.Length, inputs, Marshal.SizeOf(typeof(Input)));
+            if (successful != inputs.Length)
+            {
+                var lastWin32Error = Marshal.GetLastWin32Error();
+                Log("Failed to send key (key =" + key + ", keyEvent = " + keyEvent + "), error = " + lastWin32Error);
+            }
         }
 
         private struct Input
@@ -612,7 +617,7 @@ namespace Monitor3
                         }
                         else
                         {
-                            log("[IntimacyMode] Unknown key type");
+                            Log("[IntimacyMode] Unknown key type");
                         }
                     }
 
@@ -690,10 +695,10 @@ namespace Monitor3
 
         private static void Form_Load(object sender, EventArgs e)
         {
-            log("Form_Load");
+            Log("Form_Load");
             if (form == sender)
             {
-                log("form is sender!");
+                Log("form is sender!");
             }
             Form sourceForm = (Form)sender;
             SetWindowPos(sourceForm.Handle, HWND_TOPMOST, 0, 0, 0, 0, TOPMOST_FLAGS);
@@ -922,7 +927,7 @@ namespace Monitor3
 
                     if (isKeyPending)
                     {
-                        log("★ Key is still pending now");
+                        Log("★ Key is still pending now");
                     }
                     else if ((currentTime - lastKeyMessageTimeStamp) < KEY_MESSAGE_OFFSET)
                     {
@@ -933,7 +938,7 @@ namespace Monitor3
                     {
                         isKeyPending = true;
 
-                        log("★ Prepare to send SPACE message");
+                        Log("★ Prepare to send SPACE message");
 
                         //log("★ Send SPACE message");
 
@@ -950,33 +955,17 @@ namespace Monitor3
                         System.Threading.Timer timer = null;
                         timer = new System.Threading.Timer((obj) =>
                         {
-                            log("★ Send SPACE message");
+                            Log("★ Send SPACE message");
 
                             lastKeyMessageTimeStamp = ToMillisecondsWith(DateTime.Now);
 
                             //SendKeyPress(DIK_SPACE);
                             //SendKey(DIK_SPACE, KeyEventF.KeyDown);
-                            SendKey(VK_SPACEBAR, KeyEventF.KeyDown);
+                            SendKey(DIK_SPACE, KeyEventF.KeyDown);
 
-                            Thread.Sleep(random.Next(200, 400));
+                            Thread.Sleep(random.Next(100, 150));
 
-                            SendKey(VK_SPACEBAR, KeyEventF.KeyUp);
-
-                            //InputSimulator.SimulateKeyDown(VirtualKeyCode.SPACE);
-
-                            //Thread.Sleep(random.Next(200, 400));
-
-                            //InputSimulator.SimulateKeyUp(VirtualKeyCode.SPACE);
-
-                            //InputSimulator.SimulateKeyPress(VirtualKeyCode.SPACE);
-
-                            //Thread.Sleep(random.Next(20, 40));
-
-                            //SendKey(DIK_ESC, KeyEventF.KeyDown);
-
-                            //Thread.Sleep(random.Next(120, 200));
-
-                            //SendKey(DIK_ESC, KeyEventF.KeyUp);
+                            SendKey(DIK_SPACE, KeyEventF.KeyUp);
 
                             isKeyPending = false;
 
@@ -1012,17 +1001,17 @@ namespace Monitor3
             }
         }
 
-        private static void log(String message)
+        private static void Log(String message)
         {
-            Console.WriteLine(DateTime.Now.ToShortTimeString() + "  " + printTag() + message);
+            Console.WriteLine(DateTime.Now.ToShortTimeString() + "  " + PrintTag() + message);
         }
 
-        private static String printTag()
+        private static String PrintTag()
         {
-            return printThreadIdTag() + "  ";
+            return PrintThreadIdTag() + "  ";
         }
 
-        private static String printThreadIdTag()
+        private static String PrintThreadIdTag()
         {
             int threadId = GetCurrentWin32ThreadId();
             int managedThreadId = Thread.CurrentThread.ManagedThreadId;
